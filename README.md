@@ -73,26 +73,74 @@ CREATE TABLE IF NOT EXISTS `moneywash_xp` (
 Edit `config.lua`:
 
 ```lua
-Config.BlackMoneyItem = 'black_money'
-Config.CleanBundleItem = 'clean_bundle'
-Config.CashItem = 'cash'
-Config.DamagedNoteItem = 'damaged_note'
+--[[
+    _/_/_/    _/_/_/_/        _/_/_/    _/_/_/  _/_/_/    _/_/_/  _/_/_/    _/_/_/_/_/    _/_/_/   
+   _/    _/  _/            _/        _/        _/    _/    _/    _/    _/      _/      _/          
+  _/_/_/    _/_/_/          _/_/    _/        _/_/_/      _/    _/_/_/        _/        _/_/       
+ _/    _/  _/                  _/  _/        _/    _/    _/    _/            _/            _/      
+_/    _/  _/            _/_/_/      _/_/_/  _/    _/  _/_/_/  _/            _/      _/_/_/  
+]]
 
+Config = {}
+
+Config.BlackMoneyItem = 'black_money' -- Item name for your marked bills/dirty money in your server
+Config.CleanBundleItem = 'clean_bundle' -- Item name for the Clean Bundle Cash - Can use the default provided for ox_inventory or qb-inventory
+Config.CashItem = 'cash' -- Item name for cash in your server
+Config.DamagedNoteItem = 'damaged_note' -- Item name for damaged notes in your server - Can you the feault provided for ox_inventory or qb-inventory
+
+-- The minimum and maximum amount of damaged notes per Clean Cash Bundle
 Config.DamagedNotes = {
-    min = 5,
-    max = 20
+    min = 100,
+    max = 120
 }
 
+----------------------------
+-- Leveling system config --
+----------------------------
 Config.Leveling = {
-    Enabled = true,
-    XpPerCleanBundle = 10,
-    Levels = {
-        [1] = { xp = 0, multiplier = 1 },
-        [2] = { xp = 100, multiplier = 2 },
-        [3] = { xp = 250, multiplier = 3 },
-        [4] = { xp = 500, multiplier = 4 },
-        [5] = { xp = 1000, multiplier = 5 }
+    Enabled = true, -- true = Leveling system enabled | false = Leveling system disabled
+    XpPerCleanBundle = 1, -- How much xp a player gains per clean bundle that they get
+    Levels = {                                  -- You can add more levels here if you want
+        [1] = { xp = 0,    multiplier = 1 },    -- xp = Amount of xp to unlock that specified multiplier
+        [2] = { xp = 1000,  multiplier = 2 },   -- multiplier = How many times the items will be multiplied (e.g. multiplier = 2 | That means that you will recieve 2 x the original amount)
+        [3] = { xp = 2000,  multiplier = 4 },
+        [4] = { xp = 4000,  multiplier = 8 },
+        [5] = { xp = 8000, multiplier = 16 },
+    --  [6] = { xp = 16000, multiplier = 32 },
     }
+}
+
+---------------------------
+-- Money wash ped config --
+---------------------------
+Config.MoneyWashPed = {
+    model = 'cs_bankman', -- The model for the money wash ped (You can find all of the peds available here: https://wiki.rage.mp/wiki/Peds)
+    coords = vec4(1138.05, -3196.38, -39.67, 139.68), -- The location of the money wash ped (Make sure that you use the vector 4)
+    label = 'Money Wash' -- The label that you will see when you third-eye the money wash ped
+}
+
+-------------------------------------
+-- Money wash process steps config --
+-------------------------------------
+Config.StepLocations = {
+    [1] = {
+        label = "Count Dirty Money", -- The label that you will see when third-eye each step
+        coords = vector3(1120.0081, -3198.1414, -40.6393), -- Location of each step (Make sure that you use vector3)
+        heading = 180.0 -- IGNORE THIS
+    },
+    [2] = {
+        label = "Clean the Money",
+        coords = vector3(1133.4917, -3198.3662, -39.9209),
+        heading = 180.0
+    },
+    [3] = {
+        label = "Sort Clean Bundles",
+        coords = vector3(1116.3629, -3194.9351, -40.6057),
+        heading = 180.0
+    }
+    ----------------- NOTE ------------------
+    -- YOU ARE NOT ABLE TO ADD EXTRA STEPS --
+    -----------------------------------------
 }
 ```
 
@@ -102,13 +150,13 @@ Customize:
 - Damage ratios
 - XP gain and progression curve
 
-### 4. 📜 Add to your `server.cfg`
+### 4. 📜 Add to your `server.cfg` in this order!!!
 
 ```cfg
 ensure ox_lib
 ensure ox_inventory
 ensure ox_target
-ensure moneywash
+ensure rf_moneywash
 ```
 
 ---
@@ -125,13 +173,7 @@ ensure moneywash
 
 ---
 
-## 🧾 Customization Options
 
-- Enable job/gang-only access
-- Adjust XP progression speed and difficulty
-- Add Discord logging or webhook alerts
-- Modify animations and UI visuals
-- Add police alert logic or laundering cooldown
 
 🛒 **[Get the latest version and updates here](https://rf-scripts.tebex.io/)**
 
@@ -141,8 +183,6 @@ ensure moneywash
 
 - 💡 Optimized for `ox` ecosystem
 - 🧪 100% exploitable-safe (no client-side logic exploits)
-- ✨ Clean, maintainable code with animations and effects
-- 📁 Full source code available after purchase
 
 ---
 
